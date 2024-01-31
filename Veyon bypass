@@ -1,0 +1,27 @@
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+$form = New-Object Windows.Forms.Form
+$form.TopMost = $true
+$form.BackColor = [System.Drawing.Color]::White
+$form.TransparencyKey = [System.Drawing.Color]::White
+$form.WindowState = [System.Windows.Forms.FormWindowState]::Maximized
+$form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::None
+$form.ShowInTaskbar = $false
+
+$signature = @"
+    [DllImport("user32.dll")]
+    public static extern uint SetWindowDisplayAffinity(IntPtr hwnd, uint dwAffinity);
+"@
+Add-Type -MemberDefinition $signature -Namespace User32Interop -Name user32
+
+$handle = $form.Handle
+$res = [User32Interop.user32]::SetWindowDisplayAffinity($handle, 0x01)
+
+if ($res -eq 1) {
+    Write-Host "Successfully set."
+} else {
+    Write-Host "Failed to set display affinity."
+}
+
+$form.ShowDialog()
