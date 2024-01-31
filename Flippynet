@@ -1,0 +1,24 @@
+function checkAnswer(nm) {
+    const { 2: corAnswer } = data[nm];
+    corrects[nm] = true;
+    givens[nm] = "Your Custom Answer";
+    unlock.play();
+    document.getElementById(`al${nm}`).style.display = "none";
+    document.getElementById(`ul${nm}`).style.display = "inline-block";
+    const next = 1 + nm;
+    numCorrect++;
+    if ((seq == "yes" && next < data.length) || (seq == "final" && numCorrect == penUlt)) {
+        document.getElementById(`dl${next}`).style.display = "none";
+        document.getElementById(`al${next}`).style.display = "inline-block";
+    }
+    document.getElementById(`a${nm}`).disabled = true;
+    document.getElementById(`k${nm}`).style.display = "none";
+    document.getElementById('backBig').style.display = "inline-block";
+    if (numCorrect === data.length) {
+        stopClock();
+        showLocks();
+        document.getElementById('time').innerHTML = formatTime();
+        document.getElementById('doneScreen').style.display = "block";
+        email && sendResults();
+    }
+}
